@@ -7,6 +7,7 @@ import com.example.spring_data_jpa.repository.CourseRepository;
 import com.example.spring_data_jpa.repository.StudentRepository;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class CourseController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('course:read')")
     public List<Course> getStudent() {
         List<Course> courseList = courseRepository.findAll();
 
@@ -31,12 +33,14 @@ public class CourseController {
     }
 
     @GetMapping(path = "{courseId}")
+    @PreAuthorize("hasAuthority('course:read')")
     public Course getStudentById(@PathVariable long courseId) {
         return courseRepository.getById(courseId);
 
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('course:write')")
     public void registerNewStudent(@RequestBody Map<String,String> course) {
         Teacher teacher = Teacher.builder()
                 .firstName(course.get("teacherFirstName"))
